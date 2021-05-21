@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="sorting.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>Sorting Visualizer</h1>
+
+    <div>
+      <button id="array-btn">New Array</button>
+      <button id="bubble-sort" class="sort-btn">Bubble Sort</button>
+      <button id="selection-sort" class="sort-btn">Selection Sort</button>
+      <button id="insertion-sort" class="sort-btn">Insertion Sort</button>
+      <button id="quick-sort" class="sort-btn">Quick Sort</button>
+      <!-- <button id="merge-sort" class="sort-btn">Merge Sort</button> -->
+    </div>
+
+    <div id="sorting-bars"></div>
+
+    <div class="sliders">
+      <label id="label-bar-no" for="array-size">No of Bars : </label>
+      <input
+        id="array-size"
+        type="range"
+        min="50"
+        max="200"
+        step="1"
+        value="100"
+      />
+      <label id="bar-no-value">100</label>
+      <label id="label-time" for="time-delay">Time Delay : </label>
+      <input
+        id="time-delay"
+        type="range"
+        min="0"
+        max="25"
+        step="5"
+        value="10"
+      />
+      <label id="time-value">2</label>
+    </div>
+
+    <script src="sorting.js"></script>
+  </body>
+</html>
