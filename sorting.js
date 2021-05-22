@@ -242,7 +242,7 @@ insertionBtn.addEventListener('click', insertionSort)
 const mergeBtn = document.getElementById('merge-sort')
 mergeBtn.addEventListener('click', mergeSort)
 
-// window.addEventListener('resize', () => {
-//   document.getElementById('array-size').max = window.innerWidth
-//   console.log(window.innerWidth)
-// })
+window.addEventListener('resize', () => {
+  document.getElementById('array-size').max = (innerWidth / 1536) * 200
+  generateBars()
+})

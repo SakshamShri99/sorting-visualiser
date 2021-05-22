@@ -112,8 +112,8 @@ h1 {
   box-shadow: 9px 9px black;
 }
 #sorting-bars {
-  padding: 2rem 0.5rem 0 2rem;
-  width: 85vw;
+  padding: 2% 1% 0 1%;
+  width: 87%;
   border: yellow 2px solid;
   margin: 3rem auto;
   text-align: center;
