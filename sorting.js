@@ -4,6 +4,7 @@ let barInfo = []
 let ht
 let barNo
 let timeDelay = 2
+let barObjects = []
 
 const generateBarInfo = () => {
   barNo = Number(document.querySelector('#array-size').value)
@@ -21,12 +22,12 @@ for (let i = 0; i < barNo; i++) {
   bar.style.width = `${60 / 100}vw`
   sortingBars.appendChild(bar)
 }
+barObjects = document.getElementById('sorting-bars').childNodes
 
 function generateBars() {
   document.getElementById('sorting-bars').innerHTML = ''
   barInfo = []
   generateBarInfo()
-  console.log(barInfo)
   for (let i = 0; i < barNo; i++) {
     const bar = document.createElement('div')
     bar.id = `bar-${i}`
@@ -35,13 +36,14 @@ function generateBars() {
     bar.style.width = `${60 / barNo}vw`
     sortingBars.appendChild(bar)
   }
+  barObjects = document.getElementById('sorting-bars').childNodes
 }
 
 const swap = async (i, j) => {
   timeDelay = Number(document.querySelector('#time-delay').value)
 
-  document.getElementById(`bar-${i}`).style.backgroundColor = 'red'
-  document.getElementById(`bar-${j}`).style.backgroundColor = 'red'
+  barObjects[i].style.backgroundColor = 'red'
+  barObjects[i].style.backgroundColor = 'red'
 
   await new Promise(resolve =>
     setTimeout(() => {
@@ -51,14 +53,14 @@ const swap = async (i, j) => {
   const tmp1 = barInfo[i]
   const tmp2 = barInfo[j]
 
-  document.getElementById(`bar-${i}`).style.height = `${tmp2}%`
-  document.getElementById(`bar-${j}`).style.height = `${tmp1}%`
+  barObjects[i].style.height = `${tmp2}%`
+  barObjects[j].style.height = `${tmp1}%`
 
   barInfo[i] = tmp2
   barInfo[j] = tmp1
 
-  document.getElementById(`bar-${i}`).style.backgroundColor = 'yellow'
-  document.getElementById(`bar-${j}`).style.backgroundColor = 'yellow'
+  barObjects[i].style.backgroundColor = 'yellow'
+  barObjects[i].style.backgroundColor = 'yellow'
 }
 
 const bubbleSort = async () => {
@@ -136,17 +138,16 @@ const selectionSort = async () => {
 }
 
 const insertionSort = async () => {
-  timeDelay = Number(document.querySelector('#time-delay').value)
-
   const len = barInfo.length
   for (let i = 0; i < len; i++) {
     let tmp1 = barInfo[i]
-    document.getElementById(`bar-${i}`).style.backgroundColor = 'red'
+    barObjects[i].style.backgroundColor = 'red'
 
     let j
     for (j = i - 1; j >= 0 && barInfo[j] > tmp1; j--) {
-      document.getElementById(`bar-${j + 1}`).style.backgroundColor = 'red'
-      document.getElementById(`bar-${j}`).style.backgroundColor = 'red'
+      timeDelay = Number(document.querySelector('#time-delay').value)
+      barObjects[j + 1].style.backgroundColor = 'red'
+      barObjects[j].style.backgroundColor = 'red'
 
       await new Promise(resolve =>
         setTimeout(() => {
@@ -154,74 +155,60 @@ const insertionSort = async () => {
         }, timeDelay)
       )
 
-      document.getElementById(`bar-${j + 1}`).style.height = `${barInfo[j]}%`
+      barObjects[j + 1].style.height = `${barInfo[j]}%`
       barInfo[j + 1] = barInfo[j]
 
-      document.getElementById(`bar-${j + 1}`).style.backgroundColor = 'yellow'
-      document.getElementById(`bar-${j}`).style.backgroundColor = 'yellow'
+      barObjects[j + 1].style.backgroundColor = 'yellow'
+      barObjects[j].style.backgroundColor = 'yellow'
     }
-    document.getElementById(`bar-${j + 1}`).style.height = `${tmp1}%`
+    barObjects[j + 1].style.height = `${tmp1}%`
     barInfo[j + 1] = tmp1
-    document.getElementById(`bar-${i}`).style.backgroundColor = 'yellow'
+    barObjects[i].style.backgroundColor = 'yellow'
   }
 }
 
-// const merge = async (arr1, arr2, barInfo) => {
-//   let result = []
-//   let i = 0
-//   let j = 0
+const mergeSort = async () => {
+  let sorted = barInfo.slice(),
+    n = sorted.length,
+    buffer = new Array(n)
 
-//   while (i < arr1.length && j < arr2.length) {
-//     document.getElementById(
-//       `bar-${barInfo.indexOf(arr1[i])}`
-//     ).style.backgroundColor = 'red'
-//     document.getElementById(
-//       `bar-${barInfo.indexOf(arr2[j])}`
-//     ).style.backgroundColor = 'red'
-//     if (arr1[i] > arr2[j]) {
-//       document.getElementById(
-//         `bar-${barInfo.indexOf(arr1[i])}`
-//       ).style.height = `${tmp2}%`
-//       document.getElementById(
-//         `bar-${barInfo.indexOf(arr2[j])}`
-//       ).style.height = `${tmp1}%`
-//       result.push(arr2[j])
-//       j++
-//     } else {
-//       result.push(arr1[i])
-//       i++
-//     }
-//     document.getElementById(
-//       `bar-${barInfo.indexOf(arr1[i])}`
-//     ).style.backgroundColor = 'yellow'
-//     document.getElementById(
-//       `bar-${barInfo.indexOf(arr2[j])}`
-//     ).style.backgroundColor = 'yellow'
-//   }
-
-//   while (i < arr1.length) {
-//     result.push(arr1[i])
-//     i++
-//   }
-
-//   while (j < arr2.length) {
-//     result.push(arr2[j])
-//     j++
-//   }
-//   return result
-// }
-
-// const mergeSort = (arr = barInfo, arrInfo = barInfo) => {
-//   if (arr.length <= 1) return arr
-
-//   let halfPoint = Math.ceil(arr.length / 2)
-
-//   let firstHalf = mergeSort(arr.splice(0, halfPoint))
-
-//   let secondHalf = mergeSort(arr.splice(-halfPoint))
-
-//   return merge(firstHalf, secondHalf, arrInfo)
-// }
+  for (let size = 1; size < n; size *= 2) {
+    for (let leftStart = 0; leftStart < n; leftStart += 2 * size) {
+      let left = leftStart,
+        right = Math.min(left + size, n),
+        leftLimit = right,
+        rightLimit = Math.min(right + size, n),
+        i = left
+      while (left < leftLimit && right < rightLimit) {
+        if (sorted[left] <= sorted[right]) {
+          buffer[i++] = sorted[left++]
+        } else {
+          buffer[i++] = sorted[right++]
+        }
+      }
+      while (left < leftLimit) {
+        buffer[i++] = sorted[left++]
+      }
+      while (right < rightLimit) {
+        buffer[i++] = sorted[right++]
+      }
+      for (let i = leftStart; i < rightLimit; i++) {
+        timeDelay = Number(document.querySelector('#time-delay').value)
+        barObjects[i].style.backgroundColor = 'red'
+        await new Promise(resolve =>
+          setTimeout(() => {
+            resolve()
+          }, timeDelay)
+        )
+        barObjects[i].style.height = `${buffer[i]}%`
+        barObjects[i].style.backgroundColor = 'yellow'
+      }
+    }
+    let temp = sorted
+    sorted = buffer
+    buffer = temp
+  }
+}
 
 const arrayBtn = document.getElementById('array-btn')
 arrayBtn.addEventListener('click', generateBars)
@@ -235,8 +222,9 @@ barNoSlider.addEventListener('input', () => {
 
 const timeSlider = document.getElementById('time-delay')
 timeSlider.addEventListener('input', () => {
-  document.getElementById('time-value').innerHTML =
+  document.getElementById('time-value').innerHTML = `${
     document.querySelector('#time-delay').value / 5
+  }ms`
 })
 
 const bubbleBtn = document.getElementById('bubble-sort')
@@ -251,7 +239,10 @@ selectionBtn.addEventListener('click', selectionSort)
 const insertionBtn = document.getElementById('insertion-sort')
 insertionBtn.addEventListener('click', insertionSort)
 
-// const mergeBtn = document.getElementById('merge-sort')
-// mergeBtn.addEventListener('click', () => {
-//   mergeSort()
+const mergeBtn = document.getElementById('merge-sort')
+mergeBtn.addEventListener('click', mergeSort)
+
+// window.addEventListener('resize', () => {
+//   document.getElementById('array-size').max = window.innerWidth
+//   console.log(window.innerWidth)
 // })
